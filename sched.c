@@ -1,19 +1,22 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
 
 
-
-int main()
+int main(int argc, char *argv[])
 {
-	
 
-	//Ler teclado um arquivo
+	if(strcmp("FCFS",argv[1])==0)
+		printf ("Você escolheu o FCFS\n");
+		
+		else if (strcmp("RR",argv[1])==0)
+			printf ("Você escolheu o RR\n");
 
-	//algoritmo 1 em um arquivo
+			else if (strcmp("SJF",argv[1])==0)
+				printf ("Você escolheu o SJF\n");
+			
+			else
+				printf ("Você não escolheu nenhuma opção válida! Finalizando processo");
 
-	//algoritmo 2 em um arquivo
-
-	//algoritmo 3 em um arquivo
-	
-	return TRUE;
+	return EXIT_SUCCESS;
 }
