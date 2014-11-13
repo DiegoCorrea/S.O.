@@ -1,0 +1,19 @@
+# Make File
+# Para compilar digite
+# make
+
+OBJ = tabela.o RR.o FCFS.o SJF.o
+BIN = sched
+FLAGS = -g -Wall -pedantic
+MAIN = sched.c
+PACK = so
+
+all: ${OBJ} ${MAIN};
+   gcc ${FLAGS} ${MAIN} ${OBJ} -o ${BIN}
+
+clean: ;
+   rm -f -v ${OBJ} ${BIN}
+   rm -f -v *~
+
+zip: clean;
+   zip -r ../${PACK}.zip *
