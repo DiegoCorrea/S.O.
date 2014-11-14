@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
 void Inserir_tabela(proc *processos, char linha[30])
 {
-	proc *processo;
+	proc *processo, *andarilho;
 	int i = 0, j= 0;
 	char buffer[8];
 
@@ -134,4 +134,15 @@ void Inserir_tabela(proc *processos, char linha[30])
 		printf("%d\n",processo->ioI);
 
 	}
+
+/*
+	if( processos == NULL )
+	{
+		processos = processo;
+	}
+	else
+	{
+		for(andarilho = processos; andarilho->prox != NULL; andarilho = andarilho->prox);
+	}
+*/
 }
