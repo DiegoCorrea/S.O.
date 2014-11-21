@@ -3,21 +3,42 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <string.h>
-/*
-proc* FCFS(proc *processos)
+
+proc* FCFS(proc *processos, proc *novo)
 {
-	proc *caminhante, *buffer;
-	int i = 1;
+	proc *caminhante = NULL, *anterior = NULL;
+		
 
-	while(i != 0)
-	{
-		i = 0;
-		for(caminhante = processos, buffer = processos;caminhante->prox != NULL;)
+		for(caminhante = processos; (caminhante != NULL) && (caminhante->chegada < novo->chegada) ;anterior = caminhante, caminhante = caminhante->prox);
+		if(processos == NULL)
 		{
-			if(caminhante->chegada < buffer->chegada)
+			processos = novo;
 		}
-	}
+		else
+		{
+			if(processos == caminhante)
+			{
+				novo->prox = caminhante;
+				caminhante->ant = novo;
+				processos = novo;
+			}
+			else
+			{
+				if(caminhante == NULL)
+				{
+					anterior->prox = novo;
+					novo->ant = anterior;
+					
+				}
+				else
+				{
+					anterior->prox = novo;
+					caminhante->ant = novo;
 
+					novo->prox = caminhante;
+					novo->ant = anterior;
+				}
+			}
+		}
+	return processos;
 }
-
-*/

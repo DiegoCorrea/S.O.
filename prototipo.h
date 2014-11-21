@@ -19,10 +19,11 @@ typedef struct proc
     int  ioT;			//Instante que termina o IO
     int  timer;
     struct   proc *prox;
+    struct   proc *ant;
 }proc;
 void executar();
 proc* LerEntrada(char linha[MAX]);
 //proc* CriarTabela(char *argv[]);
-proc* FCFS(proc *);
+proc* FCFS(proc *processos, proc *novo);
 
 # endif /*_PROTOTIPO_H_*/

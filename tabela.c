@@ -24,6 +24,7 @@ proc* LerEntrada(char linha[MAX])
 
     processo = (proc*)malloc(sizeof(proc));
     processo->prox = NULL;
+    processo->ant = NULL;
     processo->timer = 0;
     
     while(linha[i] != ';')
@@ -34,7 +35,6 @@ proc* LerEntrada(char linha[MAX])
     }
     buffer[j] = '\0';
     processo->id = atoi(buffer);
-    printf("%d\n", processo->id);
     j = 0;
     i++;
     while(linha[i] != ';')
@@ -45,7 +45,6 @@ proc* LerEntrada(char linha[MAX])
     }
     buffer[j] = '\0';
     processo->chegada = atoi(buffer);
-    printf("%d\n",processo->chegada);
     j = 0;
     i++;
     while(linha[i] != ';')
@@ -56,7 +55,6 @@ proc* LerEntrada(char linha[MAX])
     }
     buffer[j] = '\0';
     processo->tempo = atoi(buffer);
-    printf("%d\n",processo->tempo);
     j = 0;
     i++;
     
@@ -70,7 +68,6 @@ proc* LerEntrada(char linha[MAX])
         }
         buffer[j] = '\0';
         processo->ioI = atoi(buffer);
-        printf("%d\n",processo->ioI);
         j = 0;
         i++;
         while(linha[i] != ';')
@@ -81,15 +78,11 @@ proc* LerEntrada(char linha[MAX])
         }
         buffer[j] = '\0';
         processo->ioT = atoi(buffer);
-        printf("%d\n",processo->ioT);
     }
     else
     {
         processo->ioI = 0;
         processo->ioT = 0;
-        printf("%d\n",processo->ioT);
-        printf("%d\n",processo->ioI);
-
     }
 
     return processo;

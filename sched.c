@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 	long pid_algoritmo;
 	permitido = 0;
     
-	proc *processos = NULL, *bufferProcesso = NULL, *ponta = NULL;
+	proc *processos = NULL, *andante;
     char linha[MAX];
 
 	printf("O nome do arquivo de ENTRADA é: %s\n", argv[2]);
@@ -27,21 +27,33 @@ int main(int argc, char *argv[])
     {
         while (fscanf(fl_entrada, "%s", linha) != EOF) 
         {
-            printf("Linha do arquivo: %s\n", linha);
-            bufferProcesso = LerEntrada(linha);
-            if(processos == NULL)
-            {
-                processos = bufferProcesso;
-                ponta = bufferProcesso;
+        	
+            printf("\n\n\nLinha do arquivo: %s\n", linha);
 
-            }
-            else
-            {
-                ponta->prox = bufferProcesso;
-                ponta = bufferProcesso;
-            }
-            printf("ID no Main: %d\n", bufferProcesso->id);
+            if(strcmp("FCFS",argv[1])==0)
+			{
+				printf ("Você escolheu o FCFS\n");
+				processos = FCFS(processos,LerEntrada(linha));	
+			}
 
+            
+            if (strcmp("RR",argv[1])==0)
+			{
+				printf ("Você escolheu o RR\n");
+			}
+			
+
+			if (strcmp("SJF",argv[1])==0)
+			{
+					printf ("Você escolheu o SJF\n");
+			}
+
+
+			printf("Tabela de Processos:\n");
+            for(andante = processos;andante != NULL; andante = andante->prox)
+            {
+            	printf("Tempo de Chegada: %d ... id: %d\n",andante->chegada,andante->id);
+            }
         }
         fclose( fl_entrada );
     }
@@ -51,29 +63,11 @@ int main(int argc, char *argv[])
 
 	if(pid_algoritmo == 0)
 	{
-		if(strcmp("FCFS",argv[1])==0)
-		{
-			printf ("Você escolheu o FCFS\n");
-			//processos = FCFS(processos);
-		}	
-			else if (strcmp("RR",argv[1])==0)
-			{
-				printf ("Você escolheu o RR\n");
-			}
-				else if (strcmp("SJF",argv[1])==0)
-			{
-					printf ("Você escolheu o SJF\n");
-			}
-				else
-					printf ("Você não escolheu nenhuma opção válida! Finalizando processo\n");
+		printf("processo filho\n");
 	}
 	else
 	{
 		//escalonador
-		for(;;)
-		{
-
-		}
 	}
 
 	if(pid_algoritmo == 0)
