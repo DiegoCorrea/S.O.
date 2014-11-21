@@ -14,15 +14,40 @@ typedef struct proc
     struct   proc *prox;
 }proc;
 
-void Inserir_tabela(proc *processos, char linha[30]);
+# include "tabela.h"
+# include "SJF.h"
+# include "FCFS.h"
+# include "RR.h"
+
+
 
 int main(int argc, char *argv[])
 {
-	proc *processos = NULL;
-	char linha[20];
+	proc *processos = NULL, *bufferProcesso = NULL;
+	char linha[MAX];
 
 	printf("O nome do arquivo de ENTRADA é: %s\n", argv[2]);
 	printf("O nome do arquivo de SAIDA é: %s\n", argv[3]);
+	processos = CriarTabela(argv[]);
+	//retirando itens do arquivo
+    FILE *fl_entrada = fopen(argv[2], "r" );
+
+    if ( fl_entrada == 0 || fl_entrada == NULL) {
+	  fprintf(stderr, "Arquivo %s não encontrado\n", argv[1]);
+	  exit(1);
+	}
+    else 
+    {
+		while (fscanf(fl_entrada, "%s", linha) != EOF) 
+		{
+			printf("Linha do arquivo: %s\n", linha);
+			bufferProcesso = LerEntrada(linha);
+		}
+        fclose( fl_entrada );
+    }
+
+	
+
 
 	if(strcmp("FCFS",argv[1])==0)
 	{
@@ -39,29 +64,12 @@ int main(int argc, char *argv[])
 			else
 				printf ("Você não escolheu nenhuma opção válida! Finalizando processo\n");
 
-
-	//retirando itens do arquivo
-    FILE *fl_entrada = fopen(argv[2], "r" );
-
-    if ( fl_entrada == 0 || fl_entrada == NULL) {
-	  fprintf(stderr, "Arquivo %s não encontrado\n", argv[1]);
-	  exit(1);
-	}
-    else 
-    {
-		while (fscanf(fl_entrada, "%s", linha) != EOF) 
-		{
-			printf("Linha do arquivo: %s\n", linha);
-			Inserir_tabela(processos,linha);
-		}
-        fclose( fl_entrada );
-    }
 	return EXIT_SUCCESS;
 }
 
-void Inserir_tabela(proc *processos, char linha[30])
+proc* LerEntrada(char linha[MAX])
 {
-	proc *processo, *andarilho;
+	proc *processo;
 	int i = 0, j= 0;
 	char buffer[8];
 
@@ -135,14 +143,5 @@ void Inserir_tabela(proc *processos, char linha[30])
 
 	}
 
-/*
-	if( processos == NULL )
-	{
-		processos = processo;
-	}
-	else
-	{
-		for(andarilho = processos; andarilho->prox != NULL; andarilho = andarilho->prox);
-	}
-*/
+	return processo;
 }
