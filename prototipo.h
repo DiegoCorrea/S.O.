@@ -25,5 +25,7 @@ void executar();
 proc* LerEntrada(char linha[MAX]);
 //proc* CriarTabela(char *argv[]);
 proc* FCFS(proc *processos, proc *novo);
+proc* RR(proc *processos, proc *novo);
+proc* SJF(proc *processos, proc *novo);
 
 # endif /*_PROTOTIPO_H_*/

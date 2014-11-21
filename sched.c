@@ -40,12 +40,14 @@ int main(int argc, char *argv[])
             if (strcmp("RR",argv[1])==0)
 			{
 				printf ("Você escolheu o RR\n");
+				processos = RR(processos,LerEntrada(linha));
 			}
 			
 
 			if (strcmp("SJF",argv[1])==0)
 			{
-					printf ("Você escolheu o SJF\n");
+				printf ("Você escolheu o SJF\n");
+				processos = SJF(processos,LerEntrada(linha));
 			}
 
 
