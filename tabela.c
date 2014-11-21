@@ -10,9 +10,6 @@ void executar()
     for(;;)
     {
         printf("Processo executando é: %d \n", permitido);
-        printf("No tempo: %d\n", timer);
-        timer++;
-
     }
 
 }
@@ -27,6 +24,7 @@ proc* LerEntrada(char linha[MAX])
 
     processo = (proc*)malloc(sizeof(proc));
     processo->prox = NULL;
+    processo->timer = 0;
     
     while(linha[i] != ';')
     {

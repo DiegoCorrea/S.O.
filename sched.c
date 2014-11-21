@@ -6,13 +6,9 @@
 # include "prototipo.h"
 
 
-
-
-
 int main(int argc, char *argv[])
 {
 	long pid_algoritmo;
-	timer = 0;
 	permitido = 0;
     
 	proc *processos = NULL, *bufferProcesso = NULL, *ponta = NULL;
@@ -80,7 +76,8 @@ int main(int argc, char *argv[])
 		}
 	}
 
-
+	if(pid_algoritmo == 0)
+		printf("finalizei o filho\n");
 
 	return EXIT_SUCCESS;
 }

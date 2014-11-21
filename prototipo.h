@@ -7,7 +7,6 @@
 # include <unistd.h>
 # define MAX 50
 
-int timer;
 int permitido;
 
 
@@ -18,6 +17,7 @@ typedef struct proc
     int  tempo;			//Tempo de processamento
     int  ioI;			//Instante que inicia o IO
     int  ioT;			//Instante que termina o IO
+    int  timer;
     struct   proc *prox;
 }proc;
 void executar();

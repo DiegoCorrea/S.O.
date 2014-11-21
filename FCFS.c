@@ -6,7 +6,17 @@
 /*
 proc* FCFS(proc *processos)
 {
-	proc *bufferProcesso;
+	proc *caminhante, *buffer;
+	int i = 1;
+
+	while(i != 0)
+	{
+		i = 0;
+		for(caminhante = processos, buffer = processos;caminhante->prox != NULL;)
+		{
+			if(caminhante->chegada < buffer->chegada)
+		}
+	}
 
 }
 
