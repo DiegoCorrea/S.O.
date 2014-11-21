@@ -1,5 +1,5 @@
-# ifndef PROTOTIPO_H_INCLUDED
-# define PROTOTIPO_H_INCLUDED
+# ifndef _PROTOTIPO_H_
+# define _PROTOTIPO_H_
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -7,7 +7,8 @@
 # include <unistd.h>
 # define MAX 50
 
-
+int timer;
+int permitido;
 
 
 typedef struct proc
@@ -24,4 +25,4 @@ proc* LerEntrada(char linha[MAX]);
 //proc* CriarTabela(char *argv[]);
 proc* FCFS(proc *);
 
-# endif /*PROTOTIPO_H*/
+# endif /*_PROTOTIPO_H_*/

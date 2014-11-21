@@ -2,8 +2,7 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <string.h>
-int timer = 0;
-int permitido = 0;
+
 # include "prototipo.h"
 
 
@@ -13,6 +12,8 @@ int permitido = 0;
 int main(int argc, char *argv[])
 {
 	long pid_algoritmo;
+	timer = 0;
+	permitido = 0;
     
 	proc *processos = NULL, *bufferProcesso = NULL, *ponta = NULL;
     char linha[MAX];
