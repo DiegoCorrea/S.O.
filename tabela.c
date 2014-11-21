@@ -4,15 +4,26 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <string.h>
-
 void executar()
-{
-    for(;;)
+{    
+    while( !((areacritica->timer >= areacritica->ioI) && (areacritica->timer <= areacritica->ioT)) && (areacritica->timer < areacritica->tempo))
     {
-        printf("Processo executando é: %d \n", permitido);
+        printf("Executando ID: %d \n",areacritica->id );
+        printf("Que chegou no Tempo: %d\n", areacritica->chegada);
+        printf("Que já executou: %d\n",areacritica->timer);
+        areacritica->timer += 1;    
     }
 
+    if((areacritica->timer >= areacritica->ioI) && (areacritica->timer <= areacritica->ioT))
+    {
+        printf("Entrou em IO\n");
+    }
+
+    if( areacritica->timer >= areacritica->tempo )
+        printf("finalizou sua execução toda\n");
+
 }
+
 
 
 
@@ -25,7 +36,7 @@ proc* LerEntrada(char linha[MAX])
     processo = (proc*)malloc(sizeof(proc));
     processo->prox = NULL;
     processo->ant = NULL;
-    processo->timer = 0;
+    processo->timer = 1;
     
     while(linha[i] != ';')
     {
@@ -81,11 +92,23 @@ proc* LerEntrada(char linha[MAX])
     }
     else
     {
-        processo->ioI = 0;
-        processo->ioT = 0;
+        processo->ioI = -1;
+        processo->ioT = -1;
     }
 
     return processo;
+}
+
+
+void contarTempoES(proc *processos)
+{
+    for(;processos != NULL;processos = processos->prox)
+    {
+        if( (processos->timer >= processos->ioI) && (processos->timer <= processos->ioT))
+        {
+            processos->timer += 1;
+        }
+    }
 }
 
 /*

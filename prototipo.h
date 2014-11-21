@@ -21,11 +21,17 @@ typedef struct proc
     struct   proc *prox;
     struct   proc *ant;
 }proc;
+proc *areacritica;
+
+
+
+
 void executar();
 proc* LerEntrada(char linha[MAX]);
 //proc* CriarTabela(char *argv[]);
 proc* FCFS(proc *processos, proc *novo);
 proc* RR(proc *processos, proc *novo);
 proc* SJF(proc *processos, proc *novo);
+void contarTempoES(proc *processos);
 
 # endif /*_PROTOTIPO_H_*/

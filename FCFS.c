@@ -42,3 +42,7 @@ proc* FCFS(proc *processos, proc *novo)
 		}
 	return processos;
 }
+
+
+
+
