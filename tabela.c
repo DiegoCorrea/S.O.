@@ -1,4 +1,19 @@
-# include "tabela.h"
+# include "prototipo.h"
+
+
+void executar()
+{
+    for(;;)
+    {
+        printf("Processo executando é: %d \n", permitido);
+        printf("No tempo: %d\n", timer);
+        timer++;
+
+    }
+
+}
+
+
 
 proc* LerEntrada(char linha[MAX])
 {

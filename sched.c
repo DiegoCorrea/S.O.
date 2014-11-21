@@ -2,18 +2,17 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <string.h>
-# define MAX 50
+int timer = 0;
+int permitido = 0;
+# include "prototipo.h"
 
-# include "tabela.h"
 
-# include "SJF.h"
-# include "FCFS.h"
-# include "RR.h"
 
 
 
 int main(int argc, char *argv[])
 {
+	long pid_algoritmo;
     
 	proc *processos = NULL, *bufferProcesso = NULL, *ponta = NULL;
     char linha[MAX];
@@ -50,22 +49,37 @@ int main(int argc, char *argv[])
         fclose( fl_entrada );
     }
 	
+	pid_algoritmo = fork();
 
 
-	if(strcmp("FCFS",argv[1])==0)
+	if(pid_algoritmo == 0)
 	{
-		printf ("Você escolheu o FCFS\n");
-	}	
-		else if (strcmp("RR",argv[1])==0)
+		if(strcmp("FCFS",argv[1])==0)
 		{
-			printf ("Você escolheu o RR\n");
-		}
-			else if (strcmp("SJF",argv[1])==0)
+			printf ("Você escolheu o FCFS\n");
+			//processos = FCFS(processos);
+		}	
+			else if (strcmp("RR",argv[1])==0)
+			{
+				printf ("Você escolheu o RR\n");
+			}
+				else if (strcmp("SJF",argv[1])==0)
+			{
+					printf ("Você escolheu o SJF\n");
+			}
+				else
+					printf ("Você não escolheu nenhuma opção válida! Finalizando processo\n");
+	}
+	else
+	{
+		//escalonador
+		for(;;)
 		{
-				printf ("Você escolheu o SJF\n");
+
 		}
-			else
-				printf ("Você não escolheu nenhuma opção válida! Finalizando processo\n");
+	}
+
+
 
 	return EXIT_SUCCESS;
 }
