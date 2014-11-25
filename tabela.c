@@ -1,27 +1,15 @@
-
 # include "prototipo.h"
 # include <stdlib.h>
 # include <stdio.h>
 # include <unistd.h>
 # include <string.h>
-void executar()
+
+
+void executar(proc *areacritica)
 {    
-    while( !((areacritica->timer >= areacritica->ioI) && (areacritica->timer <= areacritica->ioT)) && (areacritica->timer < areacritica->tempo))
-    {
-        printf("Executando ID: %d \n",areacritica->id );
-        printf("Que chegou no Tempo: %d\n", areacritica->chegada);
-        printf("Que já executou: %d\n",areacritica->timer);
-        areacritica->timer += 1;    
-    }
-
-    if((areacritica->timer >= areacritica->ioI) && (areacritica->timer <= areacritica->ioT))
-    {
-        printf("Entrou em IO\n");
-    }
-
-    if( areacritica->timer >= areacritica->tempo )
-        printf("finalizou sua execução toda\n");
-
+    areacritica->timer += 1;
+    printf("Que ja executou: %d\n",areacritica->timer);
+    sleep(SystemTime);
 }
 
 
@@ -99,52 +87,71 @@ proc* LerEntrada(char linha[MAX])
     return processo;
 }
 
+proc* colocaremES(proc *emEs, proc *processo)
+{
+    if(emEs == NULL)
+    {
+        emEs = processo;
+    }
+    else
+    {
+        emEs->ant = processo;
+        processo->prox = emEs;
+        processo->ant = NULL;
+        emEs = processo;
+    }
+    return emEs;
+}
+
 
 void contarTempoES(proc *processos)
 {
     for(;processos != NULL;processos = processos->prox)
     {
-        if( (processos->timer >= processos->ioI) && (processos->timer <= processos->ioT))
-        {
-            processos->timer += 1;
-        }
+        printf("Processo usando IO: %d\n", processos->id );
+        processos->timer += 1;
     }
 }
 
-/*
-
-proc* CriarTabela(char argv[])
+proc* verificandotempoEs(proc *emEs)
 {
-    proc *processos = NULL, *bufferProcesso = NULL, *ponta = NULL;
-    char linha[MAX];
+
+    for(; (emEs!=NULL) && (emEs->timer < emEs->ioT) ; emEs = emEs->prox);
+
+    return emEs;
+}
 
 
-    FILE *fl_entrada = fopen(argv[2], "r" );
+proc* removelista(proc *lista, proc *pararemover)
+{
 
-    if ( fl_entrada == 0 || fl_entrada == NULL) {
-      fprintf(stderr, "Arquivo %s não encontrado\n", argv[1]);
-      exit(1);
-    }
-    else 
+    if(lista == pararemover && lista->prox == NULL)
     {
-        while (fscanf(fl_entrada, "%s", linha) != EOF) 
+        lista = NULL;
+    }
+    else
+    {
+        if (lista == pararemover)
         {
-            printf("Linha do arquivo: %s\n", linha);
-            bufferProcesso = LerEntrada(linha);
-            if(processos == NULL)
+            lista = lista->prox;
+            lista->ant = NULL;
+        }
+        else
+        {
+            if (pararemover->prox == NULL)
             {
-                processos = bufferProcesso;
-                ponta = bufferProcesso;
-
+                pararemover->ant->prox = NULL;
             }
             else
             {
-                ponta->prox = bufferProcesso;
-                ponta = bufferProcesso;
+                pararemover->ant->prox = pararemover->prox;
+                pararemover->prox->ant = pararemover->ant;
             }
+            
         }
-        fclose( fl_entrada );
     }
-    return processos;
+
+    free(pararemover);
+
+    return lista;
 }
-*/

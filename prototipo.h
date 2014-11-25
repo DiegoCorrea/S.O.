@@ -4,10 +4,13 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <stdio.h>
-# include <unistd.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <unistd.h>
+#include <time.h>
 # define MAX 50
-
-int permitido;
+# define SystemTime 1
 
 
 typedef struct proc
@@ -21,17 +24,19 @@ typedef struct proc
     struct   proc *prox;
     struct   proc *ant;
 }proc;
-proc *areacritica;
 
 
 
 
-void executar();
+void executar(proc *);
 proc* LerEntrada(char linha[MAX]);
-//proc* CriarTabela(char *argv[]);
 proc* FCFS(proc *processos, proc *novo);
 proc* RR(proc *processos, proc *novo);
 proc* SJF(proc *processos, proc *novo);
 void contarTempoES(proc *processos);
+proc* colocaremES(proc *, proc *);
+proc* verificandotempoEs(proc *emEs);
+proc* removelista(proc *lista, proc *pararemover);
+
 
 # endif /*_PROTOTIPO_H_*/
