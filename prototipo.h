@@ -34,7 +34,7 @@ proc* FCFS(proc *processos, proc *novo);
 proc* RR(proc *processos, proc *novo);
 proc* SJF(proc *processos, proc *novo);
 void contarTempoES(proc *processos);
-proc* colocaremES(proc *, proc *);
+proc* empilharES(proc *, proc *);
 proc* verificandotempoEs(proc *emEs);
 proc* removelista(proc *lista, proc *pararemover);
 

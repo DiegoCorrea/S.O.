@@ -24,7 +24,7 @@ proc* LerEntrada(char linha[MAX])
     processo = (proc*)malloc(sizeof(proc));
     processo->prox = NULL;
     processo->ant = NULL;
-    processo->timer = 1;
+    processo->timer = 0;
     
     while(linha[i] != ';')
     {
@@ -87,20 +87,15 @@ proc* LerEntrada(char linha[MAX])
     return processo;
 }
 
-proc* colocaremES(proc *emEs, proc *processo)
+proc* empilharES(proc *emEs, proc *processo)
 {
-    if(emEs == NULL)
-    {
-        emEs = processo;
-    }
-    else
+    if(emEs != NULL)
     {
         emEs->ant = processo;
         processo->prox = emEs;
         processo->ant = NULL;
-        emEs = processo;
     }
-    return emEs;
+    return processo;
 }
 
 

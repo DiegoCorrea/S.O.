@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
 
 
 
-
+	andante = NULL;
 	*semaforo = -1;
 	pid_algoritmo = fork();
 	
@@ -142,11 +142,30 @@ int main(int argc, char *argv[])
 						}
 						else
 						{
-							printf("ESCALONADOR: Processo %d entrara em IO\n",processos->id );
+							
 							//entrou se processo vai para IO, processo colocado na pilha de IO
-							emEs = colocaremES(emEs, processos);
-							processos = processos->prox;
-							processos->ant = NULL;
+							if(processos->prox != NULL)
+							{
+								//caso a lista de pronto tenha varios processos
+								printf("ESCALONADOR: Varios processos na fila de pronto\n");
+								andante = processos;
+								processos = processos->prox;
+								processos->ant = NULL;
+								andante->prox = NULL;
+								andante->ant = NULL;
+								emEs = empilharES(emEs, andante);
+								
+							}
+							else
+							{
+								//caso ele seja o unico processo da lista de pronto
+								printf("ESCALONADOR: Unico processo na fila de pronto\n");
+								emEs = empilharES(emEs, processos);
+								processos = NULL;
+							}
+							printf("ESCALONADOR: Processo %d entrara em IO\n",emEs->id );
+							printf("ESCALONADOR: Processo ficará no IO de: %d até %d\n",emEs->ioI,emEs->ioT );
+							
 						}
 					}
 					else
@@ -165,7 +184,7 @@ int main(int argc, char *argv[])
 						areacritica->ioT = processos->ioT;
 						areacritica->chegada = processos->chegada;
 						*semaforo = 1;
-						printf("ESCALONADOR: Processo %d escolhido para ir a CPU\n",areacritica->id );
+						printf("\nESCALONADOR: Processo %d escolhido para ir a CPU\n",areacritica->id );
 					}
 
 				}
@@ -177,8 +196,9 @@ int main(int argc, char *argv[])
 			sleep(SystemTime);
 			//após dormir, incrementando o tempo de todos que estão em IO
 			
+			
+			//contarTempoES(emEs);
 			/*
-			contarTempoES(emEs);
 			andante = emEs;
 			while(andante == NULL)
 			{
@@ -204,7 +224,7 @@ int main(int argc, char *argv[])
 			{
 			    printf("Executando Processo de ID: %d \n",areacritica->id );
 			    printf("Que chegou no Tempo: %d\n", areacritica->chegada);
-				while( (areacritica->timer < areacritica->tempo) || (!(areacritica->timer >= areacritica->ioI) && !(areacritica->timer <= areacritica->ioT)) )
+				while( (areacritica->timer < areacritica->tempo) && !((areacritica->timer >= areacritica->ioI) && (areacritica->timer <= areacritica->ioT)) )
 				{
 					executar(areacritica);
 				}
