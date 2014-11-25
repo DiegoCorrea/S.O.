@@ -8,8 +8,7 @@
 void executar(proc *areacritica)
 {    
     areacritica->timer += 1;
-    printf("Que ja executou: %d\n",areacritica->timer);
-    sleep(SystemTime);
+    printf("--CPU: Que ja executou: %d\n",areacritica->timer);
 }
 
 
@@ -99,12 +98,14 @@ proc* empilharES(proc *emEs, proc *processo)
 }
 
 
-void contarTempoES(proc *processos)
+void contarTempoES(proc *pilhaEs)
 {
-    for(;processos != NULL;processos = processos->prox)
+    for(;pilhaEs != NULL;pilhaEs = pilhaEs->prox)
     {
-        printf("Processo usando IO: %d\n", processos->id );
-        processos->timer += 1;
+        pilhaEs->timer += 1;
+        printf("Processo usando IO: %d\n", pilhaEs->id );
+        printf("Que já executou: %d vezes\n", pilhaEs->timer );
+        
     }
 }
 

@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
 							if(processos->prox != NULL)
 							{
 								//caso a lista de pronto tenha varios processos
-								printf("ESCALONADOR: Varios processos na fila de pronto\n");
+								//printf("ESCALONADOR: Varios processos na fila de pronto\n");
 								andante = processos;
 								processos = processos->prox;
 								processos->ant = NULL;
@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
 							else
 							{
 								//caso ele seja o unico processo da lista de pronto
-								printf("ESCALONADOR: Unico processo na fila de pronto\n");
+								//printf("ESCALONADOR: Unico processo na fila de pronto\n");
 								emEs = empilharES(emEs, processos);
 								processos = NULL;
 							}
@@ -193,11 +193,13 @@ int main(int argc, char *argv[])
 					printf("ESCALONADOR: Nenhum processo disponivel para execucao\n");
 				}
 			}
+			
+			
 			sleep(SystemTime);
-			//após dormir, incrementando o tempo de todos que estão em IO
-			
-			
-			//contarTempoES(emEs);
+			if (*semaforo > -1)
+			{
+				contarTempoES(emEs);
+			}
 			/*
 			andante = emEs;
 			while(andante == NULL)
@@ -213,6 +215,7 @@ int main(int argc, char *argv[])
 
 			}
 			*/
+			
 		}
 	}
 	else
@@ -222,11 +225,12 @@ int main(int argc, char *argv[])
 		{
 			if ( *semaforo == 1 )
 			{
-			    printf("Executando Processo de ID: %d \n",areacritica->id );
-			    printf("Que chegou no Tempo: %d\n", areacritica->chegada);
+			    printf("--CPU: Executando Processo de ID: %d \n",areacritica->id );
+			    printf("--CPU:Que chegou no Tempo: %d\n", areacritica->chegada);
 				while( (areacritica->timer < areacritica->tempo) && !((areacritica->timer >= areacritica->ioI) && (areacritica->timer <= areacritica->ioT)) )
 				{
 					executar(areacritica);
+					sleep(SystemTime);
 				}
 				*semaforo = 0; 
 				printf("--CPU: Semaforo desligado\n");
