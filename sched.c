@@ -9,7 +9,7 @@
 int main(int argc, char *argv[])
 {
 	long pid_algoritmo;
-	proc *processos = NULL, *andante, *emEs = NULL;
+	proc *listaDePronto = NULL, *andante, *pilhaDeES = NULL;
     char linha[MAX];
 
 	//memoria compartilhada
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
             if(strcmp("FCFS",argv[1])==0)
 			{
 				printf ("Você escolheu o FCFS\n");
-				processos = FCFS(processos,LerEntrada(linha));	
+				listaDePronto = FCFS(listaDePronto,LerEntrada(linha));	
 			}
 
             
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 			{
 				//Criar algoritmo de ordenação da entrada de acordo com o RR
 				printf ("Você escolheu o RR\n");
-				processos = RR(processos,LerEntrada(linha));
+				listaDePronto = RR(listaDePronto,LerEntrada(linha));
 			}
 			
 
@@ -58,18 +58,18 @@ int main(int argc, char *argv[])
 			{
 				//Criar algoritmo de ordenação da entrada de acordo com o SJF
 				printf ("Você escolheu o SJF\n");
-				processos = SJF(processos,LerEntrada(linha));
+				//listaDePronto = SJF(listaDePronto,LerEntrada(linha));
 			}
         }
         fclose( fl_entrada );
     }
 
-	printf("\nTabela de Processos:\n");
-    for(andante = processos;andante != NULL; andante = andante->prox)
+	printf("\nTabela de listaDePronto:\n");
+    for(andante = listaDePronto;andante != NULL; andante = andante->prox)
     {
     	printf("Tempo de Chegada: %d ... id: %d\n",andante->chegada,andante->id);
     }
-    //Neste ponto todos os processos foram carregados do arquivo e o primeiro processo está no ponteiro *processos;
+    //Neste ponto todos os listaDePronto foram carregados do arquivo e o primeiro processo está no ponteiro *listaDePronto;
     //Que uma lista duplamente encadiada
 
 
@@ -116,55 +116,55 @@ int main(int argc, char *argv[])
 		{
 			if( *semaforo == 0 || *semaforo == -1 )
 			{
-				if (processos != NULL)
+				if (listaDePronto != NULL)
 				{
 
 					if(*semaforo == 0)
 					{
 
-						processos->timer = areacritica->timer;
+						listaDePronto->timer = areacritica->timer;
 						
-						if ((processos->timer >= processos->tempo))
+						if ((listaDePronto->timer >= listaDePronto->tempo))
 						{
 							printf("ESCALONADOR: Processo %d será morto, por tempo de execução ter terminado\n",areacritica->id );
 							//entrou se processo estiver morto
-							if (processos->prox == NULL)
+							if (listaDePronto->prox == NULL)
 							{
-								free(processos);
-								processos = NULL;
+								free(listaDePronto);
+								listaDePronto = NULL;
 							}
 							else
 							{
-								processos = processos->prox;
-								free(processos->ant);
-								processos->ant = NULL;
+								listaDePronto = listaDePronto->prox;
+								free(listaDePronto->ant);
+								listaDePronto->ant = NULL;
 							}
 						}
 						else
 						{
 							
 							//entrou se processo vai para IO, processo colocado na pilha de IO
-							if(processos->prox != NULL)
+							if(listaDePronto->prox != NULL)
 							{
-								//caso a lista de pronto tenha varios processos
-								//printf("ESCALONADOR: Varios processos na fila de pronto\n");
-								andante = processos;
-								processos = processos->prox;
-								processos->ant = NULL;
+								//caso a lista de pronto tenha varios listaDePronto
+								//printf("ESCALONADOR: Varios listaDePronto na fila de pronto\n");
+								andante = listaDePronto;
+								listaDePronto = listaDePronto->prox;
+								listaDePronto->ant = NULL;
 								andante->prox = NULL;
 								andante->ant = NULL;
-								emEs = empilharES(emEs, andante);
+								pilhaDeES = empilharES(pilhaDeES, andante);
 								
 							}
 							else
 							{
 								//caso ele seja o unico processo da lista de pronto
 								//printf("ESCALONADOR: Unico processo na fila de pronto\n");
-								emEs = empilharES(emEs, processos);
-								processos = NULL;
+								pilhaDeES = empilharES(pilhaDeES, listaDePronto);
+								listaDePronto = NULL;
 							}
-							printf("ESCALONADOR: Processo %d entrara em IO\n",emEs->id );
-							printf("ESCALONADOR: Processo ficará no IO de: %d até %d\n",emEs->ioI,emEs->ioT );
+							printf("ESCALONADOR: Processo %d entrara em IO\n",pilhaDeES->id );
+							printf("ESCALONADOR: Processo ficará no IO de: %d até %d\n",pilhaDeES->ioI,pilhaDeES->ioT );
 							
 						}
 					}
@@ -174,15 +174,15 @@ int main(int argc, char *argv[])
 							printf("ESCALONADOR: Entrando pela primeira vez\n");
 					}
 
-					if (processos != NULL)
+					if (listaDePronto != NULL)
 					{
 						//colocando o primeiro do processo na area critica
-						areacritica->id = processos->id;
-						areacritica->tempo = processos->tempo;
-						areacritica->timer = processos->timer;
-						areacritica->ioI = processos->ioI;
-						areacritica->ioT = processos->ioT;
-						areacritica->chegada = processos->chegada;
+						areacritica->id = listaDePronto->id;
+						areacritica->tempo = listaDePronto->tempo;
+						areacritica->timer = listaDePronto->timer;
+						areacritica->ioI = listaDePronto->ioI;
+						areacritica->ioT = listaDePronto->ioT;
+						areacritica->chegada = listaDePronto->chegada;
 						*semaforo = 1;
 						printf("\nESCALONADOR: Processo %d escolhido para ir a CPU\n",areacritica->id );
 					}
@@ -198,24 +198,43 @@ int main(int argc, char *argv[])
 			sleep(SystemTime);
 			if (*semaforo > -1)
 			{
-				contarTempoES(emEs);
-			}
-			/*
-			andante = emEs;
-			while(andante == NULL)
-			{
-				//trazendo o processo que estou o tempo de IO
-				andante = verificandotempoEs(emEs);
-				
-				emEs = removelista(emEs,andante);
+				//ES_verifica_saida(&pilhaDeES,&listaDePronto);
 
-				//adicionando o processo na lista de processo pronto
-				processos = FCFS(processos, andante);
+				for(andante = pilhaDeES; andante != NULL ; andante = andante->prox )
+			    {
+			        if(andante->timer > andante->ioT)
+			        {
+			            pilhaDeES = removelista(pilhaDeES,andante);
 
+			            if(strcmp("FCFS",argv[1])==0)
+						{
+							printf ("Você escolheu o FCFS\n");
+							listaDePronto = FCFS(listaDePronto,andante);	
+						}
 
-			}
-			*/
-			
+			            
+			            if (strcmp("RR",argv[1])==0)
+						{
+							//Criar algoritmo de ordenação da entrada de acordo com o RR
+							printf ("Você escolheu o RR\n");
+							listaDePronto = RR(listaDePronto,andante);
+						}
+						
+
+						if (strcmp("SJF",argv[1])==0)
+						{
+							//Criar algoritmo de ordenação da entrada de acordo com o SJF
+							printf ("Você escolheu o SJF\n");
+							//listaDePronto = SJF(listaDePronto,andante);
+						}
+
+			            
+			        }
+			    }
+
+				/////////////////////////
+				contarTempoES(pilhaDeES);
+			}			
 		}
 	}
 	else

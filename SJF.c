@@ -1,3 +1,4 @@
+/*
 #include "prototipo.h"
 proc* SJF(proc *processos, proc *novoProcesso)
 {
@@ -35,3 +36,4 @@ proc* SJF(proc *processos, proc *novoProcesso)
 
 	return processos;
 }
+*/

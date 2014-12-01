@@ -147,7 +147,21 @@ proc* removelista(proc *lista, proc *pararemover)
         }
     }
 
-    free(pararemover);
-
     return lista;
 }
+
+/*
+void ES_verifica_saida(proc **pilhaDeES, proc **listaDePronto)
+{
+    proc *buffer;
+
+    for(buffer = *pilhaDeES; buffer != NULL ; buffer = buffer->prox )
+    {
+        if(buffer->timer > buffer->ioT)
+        {
+            //pilhaDeES = removelista(pilhaDeES,buffer);
+            listaDePronto = ;
+        }
+    }
+}
+*/

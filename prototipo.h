@@ -37,6 +37,7 @@ void contarTempoES(proc *processos);
 proc* empilharES(proc *, proc *);
 proc* verificandotempoEs(proc *emEs);
 proc* removelista(proc *lista, proc *pararemover);
+//void ES_verifica_saida(proc **pilhaDeES,proc **listaDePronto);
 
 
 # endif /*_PROTOTIPO_H_*/
