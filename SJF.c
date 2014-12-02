@@ -1,28 +1,32 @@
-/*
+#include<stdio.h>
+#include <stdlib.h>
 #include "prototipo.h"
+#include <unistd.h>
+#include <string.h>
+
+
 proc* SJF(proc *processos, proc *novoProcesso)
 {
+	 int inicioDaLista = 1;
 
     proc *processosAux = NULL, *processoAnterior = NULL;
-    proc *processosOrdenadosChegada = null;
-    bool inicioDaLista = true;
 
      if(processos == NULL){
 		processos = novoProcesso;
      }else{
             processosAux = processos;
 
-            while((processosAux != null) && (novoProcesso->tempo > processosAux->tempo)){
+            while((processosAux != NULL) && (novoProcesso->tempo > processosAux->tempo)){
                 processoAnterior = processosAux;
                 processosAux = processosAux->prox;
-                inicioDaLista = false;
+                inicioDaLista = 0;
             }
 
-            if (processosAux == null){
+            if (processosAux == NULL){
                 processoAnterior->prox = novoProcesso;
                 novoProcesso->ant = processoAnterior;
             }else{
-                if (inicioDaLista){
+                if (inicioDaLista == 1){
                     novoProcesso->prox = processosAux;
                     processosAux->ant = novoProcesso;
                     processosAux = novoProcesso;
@@ -33,7 +37,7 @@ proc* SJF(proc *processos, proc *novoProcesso)
                     novoProcesso->ant = processoAnterior;
                 }
             }
+			}
 
 	return processos;
-}
-*/
+}	
