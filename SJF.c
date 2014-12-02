@@ -1,9 +1,4 @@
-#include<stdio.h>
-#include <stdlib.h>
 #include "prototipo.h"
-#include <unistd.h>
-#include <string.h>
-
 
 proc* SJF(proc *processos, proc *novoProcesso)
 {
@@ -11,7 +6,9 @@ proc* SJF(proc *processos, proc *novoProcesso)
 
     proc *processosAux = NULL, *processoAnterior = NULL;
 
-     if(processos == NULL){
+	  printf("\tEscalonamento SJF \n");
+     
+	if(processos == NULL){
 		processos = novoProcesso;
      }else{
             processosAux = processos;
