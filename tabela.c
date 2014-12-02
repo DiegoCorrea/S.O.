@@ -8,7 +8,7 @@
 void executar(proc *areacritica)
 {    
     areacritica->timer += 1;
-    printf("--CPU: Que ja executou: %d\n",areacritica->timer);
+    printf("--CPU: Processo %d, de chegada %d , executou %d vezes\n",areacritica->id, areacritica->chegada, areacritica->timer );
 }
 
 
@@ -103,19 +103,10 @@ void contarTempoES(proc *pilhaEs)
     for(;pilhaEs != NULL;pilhaEs = pilhaEs->prox)
     {
         pilhaEs->timer += 1;
-        printf("Processo usando IO: %d\n", pilhaEs->id );
-        printf("Que já executou: %d vezes\n", pilhaEs->timer );
-        
+        printf("-> I/O Processo %d, já executou %d\n", pilhaEs->id, pilhaEs->timer );        
     }
 }
 
-proc* verificandotempoEs(proc *emEs)
-{
-
-    for(; (emEs!=NULL) && (emEs->timer < emEs->ioT) ; emEs = emEs->prox);
-
-    return emEs;
-}
 
 
 proc* removelista(proc *lista, proc *pararemover)
@@ -165,3 +156,9 @@ void ES_verifica_saida(proc **pilhaDeES, proc **listaDePronto)
     }
 }
 */
+
+
+char concatenarSaida(proc *processo)
+{
+    return 'a';
+}

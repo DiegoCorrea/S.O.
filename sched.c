@@ -9,7 +9,9 @@
 int main(int argc, char *argv[])
 {
 	long pid_algoritmo;
-	proc *listaDePronto = NULL, *andante, *pilhaDeES = NULL;
+	int tempoTotal, nprocessos = 0;
+	float tempoMedio;
+	proc *listaDePronto = NULL, *pilhaDeES = NULL, *andante = NULL, *buffer = NULL, *processoNaCPU = NULL;
     char linha[MAX];
 
 	//memoria compartilhada
@@ -21,15 +23,11 @@ int main(int argc, char *argv[])
 
 	key = 1420450;
 	key2 = 123456;
-    
-
-	printf("O nome do arquivo de ENTRADA é: %s\n", argv[2]);
-	printf("O nome do arquivo de SAIDA é: %s\n", argv[3]);
 
     FILE *fl_entrada = fopen(argv[2], "r" );
 
     if ( fl_entrada == 0 || fl_entrada == NULL) {
-      fprintf(stderr, "Arquivo %s não encontrado\n", argv[1]);
+      fprintf(stderr, "Arquivo %s não encontrado\n", argv[2]);
       exit(1);
     }
     else 
@@ -37,11 +35,8 @@ int main(int argc, char *argv[])
         while (fscanf(fl_entrada, "%s", linha) != EOF) 
         {
         	
-            printf("\nLinha do arquivo: %s\n", linha);
-
             if(strcmp("FCFS",argv[1])==0)
 			{
-				printf ("Você escolheu o FCFS\n");
 				listaDePronto = FCFS(listaDePronto,LerEntrada(linha));	
 			}
 
@@ -49,7 +44,6 @@ int main(int argc, char *argv[])
             if (strcmp("RR",argv[1])==0)
 			{
 				//Criar algoritmo de ordenação da entrada de acordo com o RR
-				printf ("Você escolheu o RR\n");
 				listaDePronto = RR(listaDePronto,LerEntrada(linha));
 			}
 			
@@ -57,17 +51,11 @@ int main(int argc, char *argv[])
 			if (strcmp("SJF",argv[1])==0)
 			{
 				//Criar algoritmo de ordenação da entrada de acordo com o SJF
-				printf ("Você escolheu o SJF\n");
 				//listaDePronto = SJF(listaDePronto,LerEntrada(linha));
 			}
+			nprocessos +=1;
         }
         fclose( fl_entrada );
-    }
-
-	printf("\nTabela de listaDePronto:\n");
-    for(andante = listaDePronto;andante != NULL; andante = andante->prox)
-    {
-    	printf("Tempo de Chegada: %d ... id: %d\n",andante->chegada,andante->id);
     }
     //Neste ponto todos os listaDePronto foram carregados do arquivo e o primeiro processo está no ponteiro *listaDePronto;
     //Que uma lista duplamente encadiada
@@ -102,6 +90,7 @@ int main(int argc, char *argv[])
 
 	andante = NULL;
 	*semaforo = -1;
+	tempoTotal = 0;
 	pid_algoritmo = fork();
 	
 
@@ -116,77 +105,56 @@ int main(int argc, char *argv[])
 		{
 			if( *semaforo == 0 || *semaforo == -1 )
 			{
-				if (listaDePronto != NULL)
+				if(*semaforo == 0 && processoNaCPU != NULL)
 				{
-
-					if(*semaforo == 0)
+					processoNaCPU->timer = areacritica->timer;
+					
+					if (processoNaCPU->timer >= processoNaCPU->tempo)
 					{
+						FILE *fl_entrada = fopen(argv[3], "a" );
 
-						listaDePronto->timer = areacritica->timer;
-						
-						if ((listaDePronto->timer >= listaDePronto->tempo))
-						{
-							printf("ESCALONADOR: Processo %d será morto, por tempo de execução ter terminado\n",areacritica->id );
-							//entrou se processo estiver morto
-							if (listaDePronto->prox == NULL)
-							{
-								free(listaDePronto);
-								listaDePronto = NULL;
-							}
-							else
-							{
-								listaDePronto = listaDePronto->prox;
-								free(listaDePronto->ant);
-								listaDePronto->ant = NULL;
-							}
-						}
-						else
-						{
-							
-							//entrou se processo vai para IO, processo colocado na pilha de IO
-							if(listaDePronto->prox != NULL)
-							{
-								//caso a lista de pronto tenha varios listaDePronto
-								//printf("ESCALONADOR: Varios listaDePronto na fila de pronto\n");
-								andante = listaDePronto;
-								listaDePronto = listaDePronto->prox;
-								listaDePronto->ant = NULL;
-								andante->prox = NULL;
-								andante->ant = NULL;
-								pilhaDeES = empilharES(pilhaDeES, andante);
-								
-							}
-							else
-							{
-								//caso ele seja o unico processo da lista de pronto
-								//printf("ESCALONADOR: Unico processo na fila de pronto\n");
-								pilhaDeES = empilharES(pilhaDeES, listaDePronto);
-								listaDePronto = NULL;
-							}
-							printf("ESCALONADOR: Processo %d entrara em IO\n",pilhaDeES->id );
-							printf("ESCALONADOR: Processo ficará no IO de: %d até %d\n",pilhaDeES->ioI,pilhaDeES->ioT );
-							
-						}
+					    if ( fl_entrada == 0 || fl_entrada == NULL) {
+					      fprintf(stderr, "Arquivo %s não pode ser escrito\n", argv[3]);
+					      exit(1);
+					    }
+					    //linha = concatenarSaida(processoNaCPU);
+					    fprintf(fl_entrada,"%d;%d;%d\n", processoNaCPU->id,processoNaCPU->chegada,tempoTotal);
+
+					    fclose( fl_entrada );
+
+						printf("ESCALONADOR: Processo %d será morto, por tempo de execução ter terminado\n",processoNaCPU->id );
+						free(processoNaCPU);
+						processoNaCPU = NULL;							
 					}
 					else
 					{
-						if(*semaforo == -1)
-							printf("ESCALONADOR: Entrando pela primeira vez\n");
+						pilhaDeES = empilharES(pilhaDeES, processoNaCPU);							
+						printf("ESCALONADOR: Processo %d empilhado, ficará no IO de: %d até %d\n",processoNaCPU->id, processoNaCPU->ioI,processoNaCPU->ioT );							
 					}
+				}
+				else
+				{
+					if(*semaforo == -1)
+						printf("ESCALONADOR: Entrando pela primeira vez\n");
+				}
 
-					if (listaDePronto != NULL)
-					{
-						//colocando o primeiro do processo na area critica
-						areacritica->id = listaDePronto->id;
-						areacritica->tempo = listaDePronto->tempo;
-						areacritica->timer = listaDePronto->timer;
-						areacritica->ioI = listaDePronto->ioI;
-						areacritica->ioT = listaDePronto->ioT;
-						areacritica->chegada = listaDePronto->chegada;
-						*semaforo = 1;
-						printf("\nESCALONADOR: Processo %d escolhido para ir a CPU\n",areacritica->id );
-					}
+				if ((listaDePronto != NULL) && (tempoTotal >= listaDePronto->chegada))
+				{
+					//colocando o primeiro do processo na area critica
+					areacritica->id = listaDePronto->id;
+					areacritica->tempo = listaDePronto->tempo;
+					areacritica->timer = listaDePronto->timer;
+					areacritica->ioI = listaDePronto->ioI;
+					areacritica->ioT = listaDePronto->ioT;
+					areacritica->chegada = listaDePronto->chegada;
+					
+					processoNaCPU = listaDePronto;
+					listaDePronto = listaDePronto->prox;
+					processoNaCPU->prox = NULL;
+					processoNaCPU->ant = NULL;
 
+					*semaforo = 1;
+					printf("\nESCALONADOR: Processo %d escolhido para ir a CPU\n",areacritica->id );
 				}
 				else
 				{
@@ -194,22 +162,21 @@ int main(int argc, char *argv[])
 				}
 			}
 			
-			
-			sleep(SystemTime);
 			if (*semaforo > -1)
 			{
-				//ES_verifica_saida(&pilhaDeES,&listaDePronto);
-
-				for(andante = pilhaDeES; andante != NULL ; andante = andante->prox )
+				andante = pilhaDeES;
+				while(andante != NULL)
 			    {
 			        if(andante->timer > andante->ioT)
 			        {
-			            pilhaDeES = removelista(pilhaDeES,andante);
+			        	buffer = andante;
+			        	andante = andante->prox;
+			            pilhaDeES = removelista(pilhaDeES,buffer);
 
 			            if(strcmp("FCFS",argv[1])==0)
 						{
-							printf ("Você escolheu o FCFS\n");
-							listaDePronto = FCFS(listaDePronto,andante);	
+							listaDePronto = FCFS_execucao(listaDePronto,buffer);
+							printf("ESCALONADOR: Processo %d saindo do I/O, I/O Final %d, Vida %d\n",buffer->id, buffer->ioT,buffer->timer );	
 						}
 
 			            
@@ -217,7 +184,7 @@ int main(int argc, char *argv[])
 						{
 							//Criar algoritmo de ordenação da entrada de acordo com o RR
 							printf ("Você escolheu o RR\n");
-							listaDePronto = RR(listaDePronto,andante);
+							listaDePronto = RR(listaDePronto,buffer);
 						}
 						
 
@@ -225,15 +192,33 @@ int main(int argc, char *argv[])
 						{
 							//Criar algoritmo de ordenação da entrada de acordo com o SJF
 							printf ("Você escolheu o SJF\n");
-							//listaDePronto = SJF(listaDePronto,andante);
+							//listaDePronto = SJF(listaDePronto,buffer);
 						}
-
-			            
 			        }
+			        else
+			        	andante = andante->prox;
 			    }
-
-				/////////////////////////
 				contarTempoES(pilhaDeES);
+			}
+			tempoTotal += 1;
+			sleep(SystemTime);
+			printf("\nESCALONADOR: ACODANDO, tempo total é: %d\n", tempoTotal);
+			if (listaDePronto == NULL && pilhaDeES == NULL && processoNaCPU == NULL)
+			{
+				FILE *fl_entrada = fopen(argv[3], "a" );
+
+			    if ( fl_entrada == 0 || fl_entrada == NULL) {
+			      fprintf(stderr, "Arquivo %s não pode ser escrito\n", argv[3]);
+			      exit(1);
+			    }
+			    //linha = concatenarSaida(processoNaCPU);
+			    fprintf(fl_entrada,"Tempo total: %d\n", tempoTotal);
+			    tempoMedio = tempoTotal/nprocessos;
+			    fprintf(fl_entrada,"Tempo médio: %f\n", tempoMedio);
+
+			    fclose( fl_entrada );
+			    *semaforo = -2;
+			    return EXIT_SUCCESS;
 			}			
 		}
 	}
@@ -244,8 +229,6 @@ int main(int argc, char *argv[])
 		{
 			if ( *semaforo == 1 )
 			{
-			    printf("--CPU: Executando Processo de ID: %d \n",areacritica->id );
-			    printf("--CPU:Que chegou no Tempo: %d\n", areacritica->chegada);
 				while( (areacritica->timer < areacritica->tempo) && !((areacritica->timer >= areacritica->ioI) && (areacritica->timer <= areacritica->ioT)) )
 				{
 					executar(areacritica);
@@ -259,6 +242,8 @@ int main(int argc, char *argv[])
 				printf("--CPU idle...\n");
 				sleep(SystemTime);
 			}
+			if(*semaforo == -2)
+				return EXIT_SUCCESS;
 			
 		}
 	}

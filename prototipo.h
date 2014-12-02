@@ -4,11 +4,14 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <stdio.h>
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <unistd.h>
-#include <time.h>
+# include <sys/types.h>
+# include <sys/ipc.h>
+# include <sys/shm.h>
+# include <unistd.h>
+# include <time.h>
+
+# define TRUE 1
+# define FALSE 0
 # define MAX 50
 # define SystemTime 1
 
@@ -31,13 +34,14 @@ typedef struct proc
 void executar(proc *);
 proc* LerEntrada(char linha[MAX]);
 proc* FCFS(proc *processos, proc *novo);
+proc* FCFS_execucao(proc *processos, proc *novo);
 proc* RR(proc *processos, proc *novo);
 proc* SJF(proc *processos, proc *novo);
 void contarTempoES(proc *processos);
 proc* empilharES(proc *, proc *);
-proc* verificandotempoEs(proc *emEs);
 proc* removelista(proc *lista, proc *pararemover);
 //void ES_verifica_saida(proc **pilhaDeES,proc **listaDePronto);
+char concatenarSaida(proc *processo);
 
 
 # endif /*_PROTOTIPO_H_*/
