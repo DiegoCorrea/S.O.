@@ -141,24 +141,43 @@ proc* removelista(proc *lista, proc *pararemover)
     return lista;
 }
 
-/*
-void ES_verifica_saida(proc **pilhaDeES, proc **listaDePronto)
+proc* LerArquivo(char arquivo[], char algoritmo[], int *nprocessos)
 {
-    proc *buffer;
+    proc *listaDePronto = NULL;
+    char linha[MAX];
 
-    for(buffer = *pilhaDeES; buffer != NULL ; buffer = buffer->prox )
-    {
-        if(buffer->timer > buffer->ioT)
-        {
-            //pilhaDeES = removelista(pilhaDeES,buffer);
-            listaDePronto = ;
-        }
+    FILE *fl_entrada = fopen(arquivo, "r" );
+
+    if ( fl_entrada == 0 || fl_entrada == NULL) {
+      fprintf(stderr, "Arquivo %s não encontrado\n", arquivo);
+      exit(1);
     }
-}
-*/
+    else 
+    {
+        while (fscanf(fl_entrada, "%s", linha) != EOF) 
+        {
+            
+            if(strcmp("FCFS",algoritmo)==0)
+            {
+                listaDePronto = FCFS(listaDePronto,LerEntrada(linha));  
+            }
 
+            
+            if (strcmp("RR",algoritmo)==0)
+            {
+                //Criar algoritmo de ordenação da entrada de acordo com o RR
+                listaDePronto = RR(listaDePronto,LerEntrada(linha));
+            }
+            
 
-char concatenarSaida(proc *processo)
-{
-    return 'a';
+            if (strcmp("SJF",algoritmo)==0)
+            {
+                //Criar algoritmo de ordenação da entrada de acordo com o SJF
+                //listaDePronto = SJF(listaDePronto,LerEntrada(linha));
+            }
+            *nprocessos +=1;
+        }
+        fclose( fl_entrada );
+    }
+    return listaDePronto;
 }

@@ -42,6 +42,7 @@ proc* empilharES(proc *, proc *);
 proc* removelista(proc *lista, proc *pararemover);
 //void ES_verifica_saida(proc **pilhaDeES,proc **listaDePronto);
 char concatenarSaida(proc *processo);
+proc* LerArquivo(char arquivo[], char algoritmo[], int *nprocessos);
 
 
 # endif /*_PROTOTIPO_H_*/

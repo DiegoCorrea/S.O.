@@ -12,7 +12,6 @@ int main(int argc, char *argv[])
 	int tempoTotal, nprocessos = 0;
 	float tempoMedio;
 	proc *listaDePronto = NULL, *pilhaDeES = NULL, *andante = NULL, *buffer = NULL, *processoNaCPU = NULL;
-    char linha[MAX];
 
 	//memoria compartilhada
 	int shmid, shmid2;
@@ -24,39 +23,8 @@ int main(int argc, char *argv[])
 	key = 1420450;
 	key2 = 123456;
 
-    FILE *fl_entrada = fopen(argv[2], "r" );
+	listaDePronto = LerArquivo(argv[2],argv[1], &nprocessos);
 
-    if ( fl_entrada == 0 || fl_entrada == NULL) {
-      fprintf(stderr, "Arquivo %s não encontrado\n", argv[2]);
-      exit(1);
-    }
-    else 
-    {
-        while (fscanf(fl_entrada, "%s", linha) != EOF) 
-        {
-        	
-            if(strcmp("FCFS",argv[1])==0)
-			{
-				listaDePronto = FCFS(listaDePronto,LerEntrada(linha));	
-			}
-
-            
-            if (strcmp("RR",argv[1])==0)
-			{
-				//Criar algoritmo de ordenação da entrada de acordo com o RR
-				listaDePronto = RR(listaDePronto,LerEntrada(linha));
-			}
-			
-
-			if (strcmp("SJF",argv[1])==0)
-			{
-				//Criar algoritmo de ordenação da entrada de acordo com o SJF
-				//listaDePronto = SJF(listaDePronto,LerEntrada(linha));
-			}
-			nprocessos +=1;
-        }
-        fclose( fl_entrada );
-    }
     //Neste ponto todos os listaDePronto foram carregados do arquivo e o primeiro processo está no ponteiro *listaDePronto;
     //Que uma lista duplamente encadiada
 
