@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 {
 	long pid_algoritmo;
 	int tempoTotal, nprocessos = 0;
-	float tempoMedio;
+
 	proc *listaDePronto = NULL, *pilhaDeES = NULL, *andante = NULL, *buffer = NULL, *processoNaCPU = NULL;
 
 	//memoria compartilhada
@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 	key = 1420450;
 	key2 = 123456;
 
-	listaDePronto = LerArquivo(argv[2],argv[1], &nprocessos);
+	listaDePronto = arquivoLer(argv[2],argv[1], &nprocessos);
 
     //Neste ponto todos os listaDePronto foram carregados do arquivo e o primeiro processo está no ponteiro *listaDePronto;
     //Que uma lista duplamente encadiada
@@ -79,16 +79,7 @@ int main(int argc, char *argv[])
 					
 					if (processoNaCPU->timer >= processoNaCPU->tempo)
 					{
-						FILE *fl_entrada = fopen(argv[3], "a" );
-
-					    if ( fl_entrada == 0 || fl_entrada == NULL) {
-					      fprintf(stderr, "Arquivo %s não pode ser escrito\n", argv[3]);
-					      exit(1);
-					    }
-					    //linha = concatenarSaida(processoNaCPU);
-					    fprintf(fl_entrada,"%d;%d;%d\n", processoNaCPU->id,processoNaCPU->chegada,tempoTotal);
-
-					    fclose( fl_entrada );
+						arquivoGravar(processoNaCPU,argv[3],tempoTotal);
 
 						printf("ESCALONADOR: Processo %d será morto, por tempo de execução ter terminado\n",processoNaCPU->id );
 						free(processoNaCPU);
@@ -109,12 +100,7 @@ int main(int argc, char *argv[])
 				if ((listaDePronto != NULL) && (tempoTotal >= listaDePronto->chegada))
 				{
 					//colocando o primeiro do processo na area critica
-					areacritica->id = listaDePronto->id;
-					areacritica->tempo = listaDePronto->tempo;
-					areacritica->timer = listaDePronto->timer;
-					areacritica->ioI = listaDePronto->ioI;
-					areacritica->ioT = listaDePronto->ioT;
-					areacritica->chegada = listaDePronto->chegada;
+					copiar(areacritica,listaDePronto);
 					
 					processoNaCPU = listaDePronto;
 					listaDePronto = listaDePronto->prox;
@@ -173,18 +159,8 @@ int main(int argc, char *argv[])
 			printf("\nESCALONADOR: ACODANDO, tempo total é: %d\n", tempoTotal);
 			if (listaDePronto == NULL && pilhaDeES == NULL && processoNaCPU == NULL)
 			{
-				FILE *fl_entrada = fopen(argv[3], "a" );
+				arquivoGravarSaida(argv[3],tempoTotal,nprocessos);
 
-			    if ( fl_entrada == 0 || fl_entrada == NULL) {
-			      fprintf(stderr, "Arquivo %s não pode ser escrito\n", argv[3]);
-			      exit(1);
-			    }
-			    //linha = concatenarSaida(processoNaCPU);
-			    fprintf(fl_entrada,"Tempo total: %d\n", tempoTotal);
-			    tempoMedio = tempoTotal/nprocessos;
-			    fprintf(fl_entrada,"Tempo médio: %f\n", tempoMedio);
-
-			    fclose( fl_entrada );
 			    *semaforo = -2;
 			    return EXIT_SUCCESS;
 			}			
@@ -192,28 +168,8 @@ int main(int argc, char *argv[])
 	}
 	else
 	{
-		//CPU
-		while(1)
-		{
-			if ( *semaforo == 1 )
-			{
-				while( (areacritica->timer < areacritica->tempo) && !((areacritica->timer >= areacritica->ioI) && (areacritica->timer <= areacritica->ioT)) )
-				{
-					executar(areacritica);
-					sleep(SystemTime);
-				}
-				*semaforo = 0; 
-				printf("--CPU: Semaforo desligado\n");
-			}
-			else
-			{
-				printf("--CPU idle...\n");
-				sleep(SystemTime);
-			}
-			if(*semaforo == -2)
-				return EXIT_SUCCESS;
-			
-		}
+		CPU(areacritica,semaforo);
+		
 	}
 
 	return EXIT_SUCCESS;

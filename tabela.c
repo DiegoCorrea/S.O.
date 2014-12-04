@@ -5,12 +5,26 @@
 # include <string.h>
 
 
-void executar(proc *areacritica)
-{    
-    areacritica->timer += 1;
-    printf("--CPU: Processo %d, de chegada %d , executou %d vezes\n",areacritica->id, areacritica->chegada, areacritica->timer );
+
+void semaforoUp(int *semaforo)
+{
+    *semaforo = 1;
 }
 
+void semaforoDown(int *semaforo)
+{
+    *semaforo = 0;
+}
+
+void semaforoStart(int *semaforo)
+{
+    *semaforo = -1;
+}
+
+void semaforoClose(int *semaforo)
+{
+    *semaforo = -2;
+}
 
 
 
@@ -141,7 +155,7 @@ proc* removelista(proc *lista, proc *pararemover)
     return lista;
 }
 
-proc* LerArquivo(char arquivo[], char algoritmo[], int *nprocessos)
+proc* arquivoLer(char arquivo[], char algoritmo[], int *nprocessos)
 {
     proc *listaDePronto = NULL;
     char linha[MAX];
@@ -180,4 +194,46 @@ proc* LerArquivo(char arquivo[], char algoritmo[], int *nprocessos)
         fclose( fl_entrada );
     }
     return listaDePronto;
+}
+
+void arquivoGravar(proc *processoNaCPU, char arquivo[], int tempoTotal)
+{
+    FILE *fl_entrada = fopen(arquivo, "a" );
+
+    if ( fl_entrada == 0 || fl_entrada == NULL) {
+      fprintf(stderr, "Arquivo %s não pode ser escrito\n", arquivo);
+      exit(1);
+    }
+    //linha = concatenarSaida(processoNaCPU);
+    fprintf(fl_entrada,"%d;%d;%d\n", processoNaCPU->id,processoNaCPU->chegada,tempoTotal);
+
+    fclose( fl_entrada );
+}
+
+void arquivoGravarSaida(char arquivo[], int tempoTotal, int nprocessos)
+{
+    float tempoMedio;
+    
+    FILE *fl_entrada = fopen(arquivo, "a" );
+
+    if ( fl_entrada == 0 || fl_entrada == NULL) {
+      fprintf(stderr, "Arquivo %s não pode ser escrito\n", arquivo);
+      exit(1);
+    }
+    fprintf(fl_entrada,"Tempo total: %d\n", tempoTotal);
+    tempoMedio = tempoTotal/nprocessos;
+    fprintf(fl_entrada,"Tempo médio: %f\n", tempoMedio);
+
+    fclose( fl_entrada );
+}
+
+
+void copiar(proc *areacritica, proc *listaDePronto)
+{
+    areacritica->id = listaDePronto->id;
+    areacritica->tempo = listaDePronto->tempo;
+    areacritica->timer = listaDePronto->timer;
+    areacritica->ioI = listaDePronto->ioI;
+    areacritica->ioT = listaDePronto->ioT;
+    areacritica->chegada = listaDePronto->chegada;
 }

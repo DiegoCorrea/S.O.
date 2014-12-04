@@ -16,6 +16,8 @@
 # define SystemTime 1
 
 
+
+
 typedef struct proc
 {
     int  id;			//ID do processo
@@ -32,7 +34,6 @@ typedef struct proc
 
 
 void executar(proc *);
-proc* LerEntrada(char linha[MAX]);
 proc* FCFS(proc *processos, proc *novo);
 proc* FCFS_execucao(proc *processos, proc *novo);
 proc* RR(proc *processos, proc *novo);
@@ -40,9 +41,23 @@ proc* SJF(proc *processos, proc *novo);
 void contarTempoES(proc *processos);
 proc* empilharES(proc *, proc *);
 proc* removelista(proc *lista, proc *pararemover);
-//void ES_verifica_saida(proc **pilhaDeES,proc **listaDePronto);
 char concatenarSaida(proc *processo);
-proc* LerArquivo(char arquivo[], char algoritmo[], int *nprocessos);
+
+
+proc* arquivoLer(char arquivo[], char algoritmo[], int *nprocessos);
+proc* LerEntrada(char linha[MAX]);
+void arquivoGravar(proc *processoNaCPU, char arquivo[], int tempoTotal);
+void arquivoGravarSaida(char arquivo[], int tempoTotal, int nprocessos);
+
+
+int CPU(proc *areacritica, int *semaforo);
+void semaforoDown(int *semaforo);
+void semaforoUp(int *semaforo);
+void semaforoStart(int *semaforo);
+void semaforoClose(int *semaforo);
+
+void copiar(proc *areacritica, proc *listaDePronto);
+
 
 
 # endif /*_PROTOTIPO_H_*/
