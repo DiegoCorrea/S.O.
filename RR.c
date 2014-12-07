@@ -1,40 +1,86 @@
 #include "prototipo.h"
 
-proc* RR(proc *processos, proc *novoProcesso)
+proc* RR(proc *processos, proc *novo)
 {
-	int quantum = 1;
-	proc *processosAux = NULL, *processoAnterior = NULL;
-   
-	int inicioDaLista = 1;
-   
-	printf("\tEscalonamento Round-Robin - Quantum: %d)\n", quantum);
-   
-	processosAux = processos;
-	processoAnterior = processosAux;
+	proc *caminhante = NULL, *anterior = NULL;
+		
 
-	if (processos == NULL){
-		processos = novoProcesso;
-	}else{
-		while ((processosAux != NULL) && (novoProcesso->timer < quantum ) && (novoProcesso->tempo > processosAux->tempo)) {
-			processoAnterior = processosAux;
-			processosAux = processosAux->prox;
-			inicioDaLista = 0;
-		}	 		
-		  if (processosAux == NULL){
-                processoAnterior->prox = novoProcesso;
-                novoProcesso->ant = processoAnterior;
-            }else{
-                if (inicioDaLista == 1){
-                    novoProcesso->prox = processosAux;
-                    processosAux->ant = novoProcesso;
-                    processosAux = novoProcesso;
-                }else{
-                    processoAnterior->prox = novoProcesso;
-                    processosAux->ant = novoProcesso;
-                    novoProcesso->prox = processosAux;
-                    novoProcesso->ant = processoAnterior;
-                }
-            }	
-	}   
+	for(caminhante = processos; (caminhante != NULL) && (caminhante->chegada < novo->chegada) ;anterior = caminhante, caminhante = caminhante->prox);
+	if(processos == NULL)
+	{
+		processos = novo;
+	}
+	else
+	{
+		if(processos == caminhante)
+		{
+			novo->prox = caminhante;
+			caminhante->ant = novo;
+			processos = novo;
+		}
+		else
+		{
+			if(caminhante == NULL)
+			{
+				anterior->prox = novo;
+				novo->ant = anterior;
+				
+			}
+			else
+			{
+				anterior->prox = novo;
+				caminhante->ant = novo;
+
+				novo->prox = caminhante;
+				novo->ant = anterior;
+			}
+		}
+	}
+
 	return processos;
 }
+
+
+
+proc* RR_execucao(proc *processos, proc *novo)
+{
+	proc *caminhante = NULL, *anterior = NULL;
+		
+
+		for(caminhante = processos; (caminhante != NULL) && (caminhante->chegada < novo->chegada) ;anterior = caminhante, caminhante = caminhante->prox);
+		if(processos == NULL)
+		{
+			processos = novo;
+		}
+		else
+		{
+			if(processos == caminhante)
+			{
+				novo->prox = caminhante;
+				caminhante->ant = novo;
+				processos = novo;
+			}
+			else
+			{
+				if(caminhante == NULL)
+				{
+					anterior->prox = novo;
+					novo->ant = anterior;
+					
+				}
+				else
+				{
+					anterior->prox = novo;
+					caminhante->ant = novo;
+
+					novo->prox = caminhante;
+					novo->ant = anterior;
+				}
+			}
+		}
+	return processos;
+}
+
+
+
+

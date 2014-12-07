@@ -7,7 +7,7 @@ void CPUexecutar(proc *areacritica)
     printf("--CPU: Processo %d, de chegada %d , executou %d vezes\n",areacritica->id, areacritica->chegada, areacritica->timer );
 }
 
-int CPU(proc *areacritica, int *semaforo)
+int CPU_FCFS(proc *areacritica, int *semaforo)
 {
 	while(1)
 	{
@@ -18,6 +18,28 @@ int CPU(proc *areacritica, int *semaforo)
 				CPUexecutar(areacritica);
 				sleep(SystemTime);
 			}
+			semaforoDown(semaforo);
+			printf("--CPU: Semaforo desligado\n");
+		}
+		else
+		{
+			printf("--CPU idle...\n");
+			sleep(SystemTime);
+		}
+		if(*semaforo == -2)
+			return EXIT_SUCCESS;
+		
+	}
+}
+
+int CPU_RR(proc *areacritica, int *semaforo)
+{
+	while(1)
+	{
+		if ( *semaforo == 1 )
+		{
+			CPUexecutar(areacritica);
+			sleep(SystemTime);
 			semaforoDown(semaforo);
 			printf("--CPU: Semaforo desligado\n");
 		}

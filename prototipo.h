@@ -36,6 +36,8 @@ typedef struct proc
 
 
 proc* RR(proc *processos, proc *novo);
+proc* RR_execucao(proc *processos, proc *novo);
+
 proc* SJF(proc *processos, proc *novo);
 
 proc* FCFS(proc *processos, proc *novo);
@@ -50,7 +52,8 @@ void arquivoGravar(proc *processoNaCPU, char arquivo[], int tempoTotal);
 void arquivoGravarSaida(char arquivo[], int tempoTotal, int nprocessos);
 
 void CPUexecutar(proc *);
-int CPU(proc *areacritica, int *semaforo);
+int CPU_FCFS(proc *areacritica, int *semaforo);
+int CPU_RR(proc *areacritica, int *semaforo);
 
 void semaforoDown(int *semaforo);
 void semaforoUp(int *semaforo);
@@ -60,6 +63,10 @@ void semaforoClose(int *semaforo);
 proc* removelista(proc *lista, proc *pararemover);
 proc* LerEntrada(char linha[MAX]);
 void copiar(proc *areacritica, proc *listaDePronto);
+
+
+int ESCALONADOR_FCFS(proc *listadePronto, proc *areacritica, int *semaforo, char *argv[], int *tempoTotal);
+int ESCALONADOR_RR(proc *listadePronto, proc *areacritica, int *semaforo, char *argv[], int *tempoTotal);
 
 
 
