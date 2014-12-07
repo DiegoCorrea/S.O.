@@ -9,11 +9,15 @@
 # include <sys/shm.h>
 # include <unistd.h>
 # include <time.h>
+# include <string.h>
+
 
 # define TRUE 1
 # define FALSE 0
 # define MAX 50
 # define SystemTime 1
+# define END -2
+# define START -1
 
 
 
@@ -31,31 +35,30 @@ typedef struct proc
 }proc;
 
 
-
-
-void executar(proc *);
-proc* FCFS(proc *processos, proc *novo);
-proc* FCFS_execucao(proc *processos, proc *novo);
 proc* RR(proc *processos, proc *novo);
 proc* SJF(proc *processos, proc *novo);
-void contarTempoES(proc *processos);
-proc* empilharES(proc *, proc *);
-proc* removelista(proc *lista, proc *pararemover);
-char concatenarSaida(proc *processo);
+
+proc* FCFS(proc *processos, proc *novo);
+proc* FCFS_execucao(proc *processos, proc *novo);
+
+void EScontarTempo(proc *processos);
+proc* ESempilhar(proc *, proc *);
 
 
 proc* arquivoLer(char arquivo[], char algoritmo[], int *nprocessos);
-proc* LerEntrada(char linha[MAX]);
 void arquivoGravar(proc *processoNaCPU, char arquivo[], int tempoTotal);
 void arquivoGravarSaida(char arquivo[], int tempoTotal, int nprocessos);
 
-
+void CPUexecutar(proc *);
 int CPU(proc *areacritica, int *semaforo);
+
 void semaforoDown(int *semaforo);
 void semaforoUp(int *semaforo);
 void semaforoStart(int *semaforo);
 void semaforoClose(int *semaforo);
 
+proc* removelista(proc *lista, proc *pararemover);
+proc* LerEntrada(char linha[MAX]);
 void copiar(proc *areacritica, proc *listaDePronto);
 
 

@@ -1,8 +1,3 @@
-# include <stdlib.h>
-# include <stdio.h>
-# include <unistd.h>
-# include <string.h>
-
 # include "prototipo.h"
 
 
@@ -57,7 +52,7 @@ int main(int argc, char *argv[])
 
 
 	andante = NULL;
-	*semaforo = -1;
+	semaforoStart(semaforo);
 	tempoTotal = 0;
 	pid_algoritmo = fork();
 	
@@ -87,7 +82,7 @@ int main(int argc, char *argv[])
 					}
 					else
 					{
-						pilhaDeES = empilharES(pilhaDeES, processoNaCPU);							
+						pilhaDeES = ESempilhar(pilhaDeES, processoNaCPU);							
 						printf("ESCALONADOR: Processo %d empilhado, ficará no IO de: %d até %d\n",processoNaCPU->id, processoNaCPU->ioI,processoNaCPU->ioT );							
 					}
 				}
@@ -152,7 +147,7 @@ int main(int argc, char *argv[])
 			        else
 			        	andante = andante->prox;
 			    }
-				contarTempoES(pilhaDeES);
+				EScontarTempo(pilhaDeES);
 			}
 			tempoTotal += 1;
 			sleep(SystemTime);

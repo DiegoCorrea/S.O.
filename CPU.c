@@ -1,7 +1,7 @@
 # include "prototipo.h"
 
 
-void executar(proc *areacritica)
+void CPUexecutar(proc *areacritica)
 {    
     areacritica->timer += 1;
     printf("--CPU: Processo %d, de chegada %d , executou %d vezes\n",areacritica->id, areacritica->chegada, areacritica->timer );
@@ -15,7 +15,7 @@ int CPU(proc *areacritica, int *semaforo)
 		{
 			while( (areacritica->timer < areacritica->tempo) && !((areacritica->timer >= areacritica->ioI) && (areacritica->timer <= areacritica->ioT)) )
 			{
-				executar(areacritica);
+				CPUexecutar(areacritica);
 				sleep(SystemTime);
 			}
 			semaforoDown(semaforo);
