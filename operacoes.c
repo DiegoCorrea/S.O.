@@ -107,6 +107,8 @@ proc* removelista(proc *lista, proc *pararemover)
         }
     }
 
+    pararemover->prox = NULL;
+    pararemover->ant = NULL;
     return lista;
 }
 
@@ -118,4 +120,9 @@ void copiar(proc *areacritica, proc *listaDePronto)
     areacritica->ioI = listaDePronto->ioI;
     areacritica->ioT = listaDePronto->ioT;
     areacritica->chegada = listaDePronto->chegada;
+}
+
+void tempoContar(int *tempoTotal)
+{
+    *tempoTotal += 1;
 }

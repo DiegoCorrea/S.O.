@@ -63,7 +63,7 @@ void semaforoClose(int *semaforo);
 proc* removelista(proc *lista, proc *pararemover);
 proc* LerEntrada(char linha[MAX]);
 void copiar(proc *areacritica, proc *listaDePronto);
-
+void tempoContar(int *tempoTotal);
 
 int ESCALONADOR_FCFS(proc *listadePronto, proc *areacritica, int *semaforo, char *argv[], int *tempoTotal);
 int ESCALONADOR_RR(proc *listadePronto, proc *areacritica, int *semaforo, char *argv[], int *tempoTotal);

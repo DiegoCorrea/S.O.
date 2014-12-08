@@ -9,15 +9,16 @@ int ESCALONADOR_FCFS(proc *listaDePronto, proc *areacritica, int *semaforo, char
 
 	while(1)
 	{
+		printf("\nESCALONADOR: tempo total é: %d\n", *tempoTotal);
 		if( *semaforo == 0 || *semaforo == -1 )
 		{
 			if(*semaforo == 0 && processoNaCPU != NULL)
 			{
 				processoNaCPU->timer = areacritica->timer;
-				
+
 				if (processoNaCPU->timer >= processoNaCPU->tempo)
 				{
-					arquivoGravar(processoNaCPU,argv[3],*tempoTotal);
+					arquivoGravar(processoNaCPU,argv[3],*tempoTotal);					
 
 					printf("ESCALONADOR: Processo %d será morto, por tempo de execução ter terminado\n",processoNaCPU->id );
 					free(processoNaCPU);
@@ -29,10 +30,7 @@ int ESCALONADOR_FCFS(proc *listaDePronto, proc *areacritica, int *semaforo, char
 					printf("ESCALONADOR: Processo %d empilhado, ficará no IO de: %d até %d\n",processoNaCPU->id, processoNaCPU->ioI,processoNaCPU->ioT );							
 				}
 			}
-			else
-			{
-				processoNaCPU = listaDePronto;
-			}
+
 
 			if ((listaDePronto != NULL) && (*tempoTotal >= listaDePronto->chegada))
 			{
@@ -55,9 +53,11 @@ int ESCALONADOR_FCFS(proc *listaDePronto, proc *areacritica, int *semaforo, char
 		
 		if (*semaforo > -1)
 		{
+			EScontarTempo(pilhaDeES);
 			andante = pilhaDeES;
 			while(andante != NULL)
 		    {
+
 		        if(andante->timer > andante->ioT)
 		        {
 		        	buffer = andante;
@@ -71,11 +71,10 @@ int ESCALONADOR_FCFS(proc *listaDePronto, proc *areacritica, int *semaforo, char
 		        else
 		        	andante = andante->prox;
 		    }
-			EScontarTempo(pilhaDeES);
+			
 		}
-		*tempoTotal += 1;
+		tempoContar(tempoTotal);
 		sleep(SystemTime);
-		printf("\nESCALONADOR: ACODANDO, tempo total é: %d\n", *tempoTotal);
 		if (listaDePronto == NULL && pilhaDeES == NULL && processoNaCPU == NULL)
 		{
 		    return -2;
@@ -88,10 +87,12 @@ int ESCALONADOR_FCFS(proc *listaDePronto, proc *areacritica, int *semaforo, char
 int ESCALONADOR_RR(proc *listaDePronto, proc *areacritica, int *semaforo, char *argv[], int *tempoTotal)
 
 {
-	proc *pilhaDeES = NULL, *andante = NULL, *buffer = NULL, *processoNaCPU = NULL;
+	proc *pilhaDeES = NULL, *andante = NULL, *buffer = NULL, *processoNaCPU = NULL, *proximoProcesso;
 
 	while(1)
 	{
+		printf("\nESCALONADOR: tempo total é: %d\n", *tempoTotal);
+
 		if( *semaforo == 0 || *semaforo == -1 )
 		{
 			if(*semaforo == 0 && processoNaCPU != NULL)
@@ -115,38 +116,46 @@ int ESCALONADOR_RR(proc *listaDePronto, proc *areacritica, int *semaforo, char *
 					}
 					else
 					{
-						processoNaCPU = processoNaCPU->prox;
+						listaDePronto = FCFS_execucao(listaDePronto,processoNaCPU);
 					} 
 				}
 				
+
+				processoNaCPU = proximoProcesso;
+				if (processoNaCPU != NULL)
+				{
+					proximoProcesso = proximoProcesso->prox;
+					listaDePronto = removelista(listaDePronto,processoNaCPU);
+				}
+				
+				
 			}
-			else
+			if (*semaforo == -1)
 			{
 				processoNaCPU = listaDePronto;
+				proximoProcesso = listaDePronto->prox;
+				listaDePronto = removelista(listaDePronto,processoNaCPU);
 			}
+				
 
 			if ((processoNaCPU != NULL) && (*tempoTotal >= processoNaCPU->chegada))
 			{
 				//colocando o primeiro do processo na area critica
-				copiar(areacritica,listaDePronto);
-				
-				processoNaCPU = listaDePronto;
-				listaDePronto = listaDePronto->prox;
-				processoNaCPU->prox = NULL;
-				processoNaCPU->ant = NULL;
+				copiar(areacritica,processoNaCPU);
 
 				*semaforo = 1;
 				printf("\nESCALONADOR: Processo %d escolhido para ir a CPU\n",areacritica->id );
 			}
 			else
 			{
-				printf("ESCALONADOR: Nenhum processo disponivel para execucao\n");
-				processoNaCPU = listaDePronto;
+				printf("ESCALONADOR: Voltando ao inicio da lista\n");
+				*semaforo = -1;
 			}
 		}
 		
 		if (*semaforo > -1)
 		{
+			EScontarTempo(pilhaDeES);
 			andante = pilhaDeES;
 			while(andante != NULL)
 		    {
@@ -162,11 +171,12 @@ int ESCALONADOR_RR(proc *listaDePronto, proc *areacritica, int *semaforo, char *
 		        else
 		        	andante = andante->prox;
 		    }
-			EScontarTempo(pilhaDeES);
 		}
-		*tempoTotal += 1;
+
+		tempoContar(tempoTotal);
+
 		sleep(SystemTime);
-		printf("\nESCALONADOR: ACODANDO, tempo total é: %d\n", *tempoTotal);
+
 		if (listaDePronto == NULL && pilhaDeES == NULL && processoNaCPU == NULL)
 		{
 		    return -2;
