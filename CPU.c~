@@ -7,7 +7,7 @@ void CPUexecutar(proc *areacritica)
     printf("--CPU: Processo %d, de chegada %d , executou %d vezes\n",areacritica->id, areacritica->chegada, areacritica->timer );
 }
 
-int CPU_SJF(proc *areacritica, int *semaforo)
+int CPU_FCFS(proc *areacritica, int *semaforo)
 {
 	while(1)
 	{

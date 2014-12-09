@@ -47,7 +47,7 @@ proc* RR_execucao(proc *processos, proc *novo)
 	proc *caminhante = NULL, *anterior = NULL;
 		
 
-	for(caminhante = processos; (caminhante != NULL) && (caminhante->chegada < novo->chegada) ;anterior = caminhante, caminhante = caminhante->prox);
+		for(caminhante = processos; (caminhante != NULL) && (caminhante->chegada < novo->chegada) ;anterior = caminhante, caminhante = caminhante->prox);
 		if(processos == NULL)
 		{
 			processos = novo;

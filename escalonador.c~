@@ -60,7 +60,7 @@ int ESCALONADOR_SJF(proc *listaDePronto, proc *areacritica, int *semaforo, char 
 		        	andante = andante->prox;
 		            pilhaDeES = removelista(pilhaDeES,buffer);
 					
-					listaDePronto = SJF_execucao(listaDePronto,buffer);
+					listaDePronto = FCFS_execucao(listaDePronto,buffer);
 					printf("ESCALONADOR: Processo %d saindo do I/O, I/O Final %d, Vida %d\n",buffer->id, buffer->ioT,buffer->timer );	
 
 		        }
