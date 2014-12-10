@@ -66,7 +66,7 @@ void arquivoGravarSaida(char arquivo[], int tempoTotal, int nprocessos)
       exit(1);
     }
     fprintf(fl_entrada,"Tempo total: %d\n", tempoTotal);
-    tempoMedio = tempoTotal/nprocessos;
+    tempoMedio = (float)tempoTotal/nprocessos;
     fprintf(fl_entrada,"Tempo médio: %f\n", tempoMedio);
 
     fclose( fl_entrada );

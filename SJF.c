@@ -29,10 +29,7 @@ void caminha(proc *processoAnterior, proc *processosAux){
 
 proc* SJF(proc *processos, proc *novoProcesso)
 {
-    proc *processosAux = NULL, *processoAnterior = NULL;
-
-	  printf("\tEscalonamento SJF \n");
-     
+    proc *processosAux = NULL, *processoAnterior = NULL;     
 	if(processos == NULL){
 		processos = novoProcesso;
      }else{
