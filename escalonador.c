@@ -28,18 +28,26 @@ int ESCALONADOR_SJF(proc *listaDePronto, proc *areacritica, int *semaforo, char 
 				}
 			}
 
-			if ((listaDePronto != NULL) && (*tempoTotal >= listaDePronto->chegada))
+			if (listaDePronto != NULL) 
 			{
-				//colocando o primeiro do processo na area critica
-				copiar(areacritica,listaDePronto);
-				
-				processoNaCPU = listaDePronto;
-				listaDePronto = listaDePronto->prox;
-				processoNaCPU->prox = NULL;
-				processoNaCPU->ant = NULL;
 
-				*semaforo = 1;
-				printf("\nESCALONADOR: Processo %d escolhido para ir a CPU\n",areacritica->id );
+				for(andante = listaDePronto->prox, buffer = listaDePronto; andante!= NULL && *tempoTotal >= andante->chegada ; andante = andante->prox)
+				{
+					if (andante != NULL && andante->tempo < buffer->tempo)
+						buffer = andante;
+				}
+
+				if (buffer->chegada <= *tempoTotal)
+				{
+					//colocando o primeiro do processo na area critica
+					listaDePronto = removelista(listaDePronto, buffer);
+					processoNaCPU = buffer;
+					copiar(areacritica, buffer);				
+
+					*semaforo = 1;
+					printf("\nESCALONADOR: Processo %d escolhido para ir a CPU\n",areacritica->id );
+				}
+				
 			}
 			else
 			{

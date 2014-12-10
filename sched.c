@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 	int *semaforo;
 
 	listaDePronto = arquivoLer(argv[2],argv[1], &nprocessos);
-andante = listaDePronto;
+	andante = listaDePronto;
     //Neste ponto todos os listaDePronto foram carregados do arquivo e o primeiro processo está no ponteiro *listaDePronto;
     //Que uma lista duplamente encadiada
 		
@@ -85,7 +85,7 @@ andante = listaDePronto;
 			CPU_FCFS(areacritica,semaforo);
 		}
         
-      if (strcmp("RR",argv[1])==0)
+      	if (strcmp("RR",argv[1])==0)
 		{
 			CPU_RR(areacritica,semaforo);
 		}
